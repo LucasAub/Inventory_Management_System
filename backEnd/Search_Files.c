@@ -9,7 +9,7 @@ void searchFile(const char *path, const char *fileName)
 {
     // Open the directory
     DIR *dir = opendir(path);
-
+    
     // Check if the directory was successfully opened
     if (!dir) {
         printf("Error: Unable to open directory.\n");
