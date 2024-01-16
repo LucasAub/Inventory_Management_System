@@ -1,27 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include <dirent.h>
-#include <fileAdd.h>
-#include <ListFiles.h>
-#include <removeFile.h>
-
-#define FILE_NUMBER 10
-
-void PrintMenu(const char *directory);
-void AddFile(const char* directory);
-void ViewFile(const char* directory);
-void SearchFile(const char* directory);
-void UpdateFile(const char* directory);
-void DeleteFile(const char* directory);
-
-int main(void)
-{
-    const char *directory = "files"; // Ensure this directory exists
-    PrintMenu(directory);
-    return EXIT_SUCCESS;
-}
+#include <ctype.h>
 
 void PrintMenu(const char *directory)
 {
@@ -33,7 +14,7 @@ void PrintMenu(const char *directory)
         printf("\n----------------\n");
         printf("File Management\n");
         printf("----------------\n");
-        printf("\n1. Add File\n2. View File\n3. Search File\n4. Update File\n5. Delete File\n6. Exit\n\nEnter your choice (Only Number): ");
+        printf("\n1. Add File\n2. View File\n3. Search File\n4. Delete File\n5. Exit\n\nEnter your choice (Only Number): ");
 
         // Read input as a string
         fgets(input, 10, stdin);
@@ -73,12 +54,9 @@ void PrintMenu(const char *directory)
             SearchFile(directory);
             break;
         case 4:
-            UpdateFile(directory);
-            break;
-        case 5:
             DeleteFile(directory);
             break;
-        case 6:
+        case 5:
             printf("Exit!\n");
             printf("\n----------------\n");
             exit(0);
@@ -88,27 +66,43 @@ void PrintMenu(const char *directory)
     }
 }
 
-void AddFile(const char* directory) {
+void AddFile(const char *directory) {
     char filename[100];
-    printf("Enter file name: ");
-    fgets(filename, 100, stdin);
-    filename[strcspn(filename, "\n")] = 0; // Remove newline character
+    int id, quantity;
+    float price;
+    char productName[100];
 
-    char filepath[150];
-    sprintf(filepath, "%s/%s", directory, filename);
+    // Get details from the user
+    printf("Enter product name: ");
+    fgets(productName, 100, stdin);
+    productName[strcspn(productName, "\n")] = 0; // Remove newline character
 
-    FILE* file = fopen(filepath, "w");
+    printf("Enter ID: ");
+    scanf("%d", &id);
+    printf("Enter quantity: ");
+    scanf("%d", &quantity);
+    printf("Enter price: ");
+    scanf("%f", &price);
+    getchar(); // Consume the newline character left by scanf
+
+    // Create the file name based on product name
+    sprintf(filename, "%s/%s.txt", directory, productName);
+
+    // Create and open the file
+    FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Failed to create file.\n");
         return;
     }
-    
-    // Here, you can add more details to the file as needed
-    fprintf(file, "File details here...\n");
 
+    // Write the details to the file
+    fprintf(file, "ID: %d\nProduct Name: %s\nQuantity: %d\nPrice: %.2f\n", id, productName, quantity, price);
+
+    // Close the file
     fclose(file);
     printf("File '%s' created successfully.\n", filename);
 }
+
 
 void ViewFile(const char* directory) {
     DIR *dir;
@@ -151,44 +145,6 @@ void SearchFile(const char* directory) {
         closedir(dir);
     }
 }
-
-void UpdateFile(const char* directory) {
-    char filename[100];
-    printf("Enter file name to update: ");
-    fgets(filename, 100, stdin);
-    filename[strcspn(filename, "\n")] = 0; // Remove newline character
-
-    char filepath[150];
-    sprintf(filepath, "%s/%s", directory, filename);
-
-    // Check if the file exists
-    FILE* file = fopen(filepath, "r");
-    if (file == NULL) {
-        printf("File does not exist.\n");
-        return;
-    }
-    fclose(file); // Close the file as we only wanted to check its existence
-
-    // Open the file again, this time for writing (this will clear existing content)
-    file = fopen(filepath, "w");
-    if (file == NULL) {
-        printf("Failed to open file for updating.\n");
-        return;
-    }
-
-    // Get new content for the file
-    printf("Enter new content for the file:\n");
-    char content[1024]; // Adjust size as needed
-    fgets(content, 1024, stdin);
-    content[strcspn(content, "\n")] = 0; // Remove newline character
-
-    // Write the new content to the file
-    fprintf(file, "%s\n", content);
-
-    fclose(file);
-    printf("File '%s' updated successfully.\n", filename);
-}
-
 
 void DeleteFile(const char* directory) {
     char filename[100];
