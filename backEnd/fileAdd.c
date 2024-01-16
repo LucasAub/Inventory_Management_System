@@ -15,4 +15,5 @@ int main(void)
 
     // Close the file
     fclose(fptr);
+    return 0;
 }
