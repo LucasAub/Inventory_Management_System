@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<dirent.h>
+#include <dirent.h>
 
-void listFiles(const char *path)
+int listFiles(const char *path)
 {
     struct dirent *dp;
     DIR *dir = opendir(path);

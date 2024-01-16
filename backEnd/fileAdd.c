@@ -11,7 +11,7 @@ int main(void)
     FILE *fptr;
 
     // Create a file
-    fptr = fopen("test.txt", "w");
+    fptr = fopen("/Inventory_Management_System/data/test.txt", "w");
 
     // Close the file
     fclose(fptr);
