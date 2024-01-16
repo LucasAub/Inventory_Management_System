@@ -119,32 +119,30 @@ void ViewFile(const char* directory) {
     }
 }
 
-void SearchFile(const char* directory) {
+void SearchFile(const char *directory) {
     char searchName[100];
     printf("Enter file name to search: ");
     fgets(searchName, 100, stdin);
     searchName[strcspn(searchName, "\n")] = 0; // Remove newline character
 
-    DIR *dir;
-    struct dirent *entry;
+    char filepath[150];
+    sprintf(filepath, "%s/%s.txt", directory, searchName);
 
-    if ((dir = opendir(directory)) == NULL) {
-        perror("opendir() error");
-    } else {
-        int found = 0;
-        while ((entry = readdir(dir)) != NULL) {
-            if (strcmp(entry->d_name, searchName) == 0) {
-                printf("File '%s' found.\n", searchName);
-                found = 1;
-                break;
-            }
-        }
-        if (!found) {
-            printf("File not found.\n");
-        }
-        closedir(dir);
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        printf("File '%s' not found.\n", searchName);
+        return;
     }
+
+    printf("Contents of '%s':\n", searchName);
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        printf("%s", line);
+    }
+
+    fclose(file);
 }
+
 
 void DeleteFile(const char* directory) {
     char filename[100];
