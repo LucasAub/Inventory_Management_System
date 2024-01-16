@@ -1,10 +1,6 @@
-// product ID 
-// name
-// qty 
-// price
-
 #include <stdio.h>
 #include <stdlib.h>
+#include<dirent.h>
 
 void listFiles(const char *path)
 {
